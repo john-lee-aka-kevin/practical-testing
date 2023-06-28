@@ -1,5 +1,6 @@
 package sample.cafekiosk.unit;
 
+import lombok.Getter;
 import sample.cafekiosk.unit.beverages.Beverage;
 import sample.cafekiosk.unit.order.Order;
 
@@ -10,6 +11,7 @@ import java.util.List;
 /**
  * 카페 키오스크
  */
+@Getter
 public class CafeKiosk {
     /**
      * 주문한 음료 목록
