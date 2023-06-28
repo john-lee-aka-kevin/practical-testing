@@ -1,5 +1,8 @@
 package sample.cafekiosk.unit;
 
+import sample.cafekiosk.unit.beverages.Americano;
+import sample.cafekiosk.unit.beverages.Latte;
+
 /**
  * 카페 키오스크를 실행시키기 위한 Runner
  */

@@ -1,5 +1,7 @@
 package sample.cafekiosk.unit;
 
+import sample.cafekiosk.unit.beverages.Beverage;
+
 import java.util.ArrayList;
 import java.util.List;
 
