@@ -32,6 +32,28 @@ class CafeKioskTest {
         Assertions.assertThat(cafeKiosk.getBeverages().get(0).getName()).isEqualTo("아메리카노");
     }
 
+    @DisplayName("음료 다건 추가하기 기능 테스트 - 자동화 테스트")
+    @Test
+    void add_several_beverages() {
+        final var cafeKiosk = new CafeKiosk();
+        final var americano = new Americano();
+
+        cafeKiosk.add(americano, 2);
+        Assertions.assertThat(cafeKiosk.getBeverages()).hasSize(2);
+        Assertions.assertThat(cafeKiosk.getBeverages().get(0)).isEqualTo(americano);
+        Assertions.assertThat(cafeKiosk.getBeverages().get(1)).isEqualTo(americano);
+    }
+
+    @DisplayName("음료 0잔 추가하기시 예외 테스트")
+    @Test
+    void add_zero_beverages() {
+        final var cafeKiosk = new CafeKiosk();
+
+        Assertions.assertThatThrownBy(() -> cafeKiosk.add(new Americano(), 0))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("음료는 1잔 이상 부터 주문하실 수 있습니다.");
+    }
+
     @DisplayName("음료 삭제하기 기능 테스트 - 자동화 테스트")
     @Test
     void remove() {
