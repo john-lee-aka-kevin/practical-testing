@@ -1,5 +1,6 @@
 package sample.cafekiosk.unit.beverages;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -12,6 +13,6 @@ class AmericanoTest {
     void getName() {
         final var americano = new Americano();
 
-        assertEquals(americano.getName(), "아메리카노");
+        Assertions.assertThat(americano.getName()).isEqualTo("아메리카노");
     }
 }
