@@ -15,4 +15,12 @@ class AmericanoTest {
 
         Assertions.assertThat(americano.getName()).isEqualTo("아메리카노");
     }
+
+    @DisplayName("아메리카노 객체의 가격 검증")
+    @Test
+    void getPrice() {
+        final var americano = new Americano();
+
+        Assertions.assertThat(americano.getPrice()).isEqualTo(4000);
+    }
 }
