@@ -7,6 +7,7 @@ import sample.cafekiosk.unit.order.Order;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * 카페 키오스크
@@ -25,6 +26,25 @@ public class CafeKiosk {
      */
     public void add(final Beverage beverage) {
         this.beverages.add(beverage);
+    }
+
+    /**
+     * 주문 (음료 추가) - 고도화
+     *
+     * <pre>
+     * 주문시 음료의 수량도 받을 수 있도록 고도화
+     * </pre>
+     *
+     * @param beverage 음료
+     * @param count 수량
+     *
+     * @throws IllegalArgumentException count(수량)이 0 이하일 경우 예외
+     */
+    public void add(final Beverage beverage, final int count) throws IllegalArgumentException {
+        if (count <= 0) throw new IllegalArgumentException("음료는 1잔 이상 부터 주문하실 수 있습니다.");
+
+        IntStream.range(0, count)
+                .forEach((i) -> this.beverages.add(beverage));
     }
 
     /**
