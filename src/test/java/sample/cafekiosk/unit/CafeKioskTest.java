@@ -23,7 +23,7 @@ class CafeKioskTest {
         System.out.println(">>>> 담긴 음료 : " + cafeKiosk.getBeverages().get(0).getName());
     }
 
-    @DisplayName("음료 추가하기 기능 테스트 - 자동화 테스트")
+    @DisplayName("음료 추가하기 기능 테스트")
     @Test
     void add() {
         final var cafeKiosk = new CafeKiosk();
@@ -34,7 +34,7 @@ class CafeKioskTest {
         Assertions.assertThat(cafeKiosk.getBeverages().get(0).getName()).isEqualTo("아메리카노");
     }
 
-    @DisplayName("음료 다건 추가하기 기능 테스트 - 자동화 테스트")
+    @DisplayName("음료 다건 추가하기 기능 테스트")
     @Test
     void add_several_beverages() {
         final var cafeKiosk = new CafeKiosk();
@@ -56,7 +56,7 @@ class CafeKioskTest {
                 .hasMessage("음료는 1잔 이상 부터 주문하실 수 있습니다.");
     }
 
-    @DisplayName("음료 삭제하기 기능 테스트 - 자동화 테스트")
+    @DisplayName("음료 삭제하기 기능 테스트")
     @Test
     void remove() {
         final var cafeKiosk = new CafeKiosk();
@@ -69,7 +69,7 @@ class CafeKioskTest {
         Assertions.assertThat(cafeKiosk.getBeverages()).isEmpty();
     }
 
-    @DisplayName("음료 전체 삭제하기 기능 테스트 - 자동화 테스트")
+    @DisplayName("음료 전체 삭제하기 기능 테스트")
     @Test
     void clear() {
         final var cafeKiosk = new CafeKiosk();
@@ -82,7 +82,7 @@ class CafeKioskTest {
         Assertions.assertThat(cafeKiosk.getBeverages()).isEmpty();
     }
 
-    @DisplayName("주문하기 기능 테스트 - 자동화 테스트")
+    @DisplayName("주문하기 기능 테스트")
     @Test
     void createOrder() {
         final var cafeKiosk = new CafeKiosk();
@@ -95,5 +95,20 @@ class CafeKioskTest {
 
         Assertions.assertThat(order.getBeverages()).hasSize(1);
         Assertions.assertThat(order.getBeverages().get(0).getName()).isEqualTo("아메리카노");
+    }
+    
+    @DisplayName("주문하기 기능 - 예외 테스트(주문 불가 시간 주문)")
+    @Test
+    void createOrderUnavailableOrderTime() {
+        final var cafeKiosk = new CafeKiosk();
+        final var americano = new Americano();
+
+        cafeKiosk.add(americano);
+
+        final var unavailableOrderDateTime = LocalDateTime.of(2023, 7, 3, 9, 59);
+
+        Assertions.assertThatThrownBy(() -> cafeKiosk.createOrder(unavailableOrderDateTime))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("주문 가능 시간이 아닙니다. 관리자에게 문의하세요.");
     }
 }
