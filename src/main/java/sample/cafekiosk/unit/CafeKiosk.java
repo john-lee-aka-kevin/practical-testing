@@ -90,8 +90,7 @@ public class CafeKiosk {
      *
      * @return 주문 정보
      */
-    public Order createOrder() {
-        final LocalDateTime currentDateTime = LocalDateTime.now();
+    public Order createOrder(final LocalDateTime currentDateTime) {
         final LocalTime currentTime = currentDateTime.toLocalTime();
         final boolean unavailableOrderTime = currentTime.isBefore(SHOP_OPEN_TIME) || currentTime.isAfter(SHOP_CLOSE_TIME); // 현재 시간이 오픈시간(10:00) 보다 이르거나, 마감시간(22:00) 보다 늦으면 주문 불가 시간
         

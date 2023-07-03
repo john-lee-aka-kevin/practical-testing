@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import sample.cafekiosk.unit.beverages.Americano;
 import sample.cafekiosk.unit.beverages.Latte;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("카페 키오스크 테스트")
@@ -88,7 +90,8 @@ class CafeKioskTest {
 
         cafeKiosk.add(americano);
 
-        final var order = cafeKiosk.createOrder();
+        final var nowDate = LocalDateTime.of(2023, 7, 3, 10, 0);
+        final var order = cafeKiosk.createOrder(nowDate);
 
         Assertions.assertThat(order.getBeverages()).hasSize(1);
         Assertions.assertThat(order.getBeverages().get(0).getName()).isEqualTo("아메리카노");
