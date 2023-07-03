@@ -5,6 +5,7 @@ import sample.cafekiosk.unit.beverages.Beverage;
 import sample.cafekiosk.unit.order.Order;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -14,6 +15,16 @@ import java.util.stream.IntStream;
  */
 @Getter
 public class CafeKiosk {
+    /**
+     * 가게 오픈 시간 (10:00)
+     */
+    private static final LocalTime SHOP_OPEN_TIME = LocalTime.of(10, 0);
+
+    /**
+     * 가게 마감 시간 (22:00)
+     */
+    private static final LocalTime SHOP_CLOSE_TIME = LocalTime.of(22, 0);
+    
     /**
      * 주문한 음료 목록
      */
@@ -80,6 +91,12 @@ public class CafeKiosk {
      * @return 주문 정보
      */
     public Order createOrder() {
-        return new Order(LocalDateTime.now(), this.beverages);
+        final LocalDateTime currentDateTime = LocalDateTime.now();
+        final LocalTime currentTime = currentDateTime.toLocalTime();
+        final boolean unavailableOrderTime = currentTime.isBefore(SHOP_OPEN_TIME) || currentTime.isAfter(SHOP_CLOSE_TIME); // 현재 시간이 오픈시간(10:00) 보다 이르거나, 마감시간(22:00) 보다 늦으면 주문 불가 시간
+        
+        if (unavailableOrderTime) throw new IllegalArgumentException("주문 가능 시간이 아닙니다. 관리자에게 문의하세요.");
+        
+        return new Order(currentDateTime, this.beverages);
     }
 }
