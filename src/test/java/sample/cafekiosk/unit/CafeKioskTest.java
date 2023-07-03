@@ -79,4 +79,18 @@ class CafeKioskTest {
         cafeKiosk.clear();
         Assertions.assertThat(cafeKiosk.getBeverages()).isEmpty();
     }
+
+    @DisplayName("주문하기 기능 테스트 - 자동화 테스트")
+    @Test
+    void createOrder() {
+        final var cafeKiosk = new CafeKiosk();
+        final var americano = new Americano();
+
+        cafeKiosk.add(americano);
+
+        final var order = cafeKiosk.createOrder();
+
+        Assertions.assertThat(order.getBeverages()).hasSize(1);
+        Assertions.assertThat(order.getBeverages().get(0).getName()).isEqualTo("아메리카노");
+    }
 }
