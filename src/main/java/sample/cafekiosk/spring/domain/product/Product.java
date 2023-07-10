@@ -36,7 +36,7 @@ public class Product extends BaseEntity {
      * 판매 상태
      */
     @Enumerated(EnumType.STRING)
-    private ProductSellingType sellingType;
+    private ProductSellingStatus sellingStatus;
 
     /**
      * 상품명

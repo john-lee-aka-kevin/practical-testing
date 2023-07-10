@@ -13,5 +13,8 @@ public enum ProductType {
     BOTTLE("병 음료"),
     BAKERY("베이커리");
 
+    /**
+     * Enum의 한글명
+     */
     private final String text;
 }
