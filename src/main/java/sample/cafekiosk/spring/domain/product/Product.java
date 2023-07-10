@@ -1,6 +1,7 @@
 package sample.cafekiosk.spring.domain.product;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sample.cafekiosk.spring.domain.BaseEntity;
@@ -47,4 +48,13 @@ public class Product extends BaseEntity {
      * 상품 가격
      */
     private int price;
+
+    @Builder
+    private Product(final String productNumber, final ProductType type, final ProductSellingStatus sellingStatus, final String name, final int price) {
+        this.productNumber = productNumber;
+        this.type = type;
+        this.sellingStatus = sellingStatus;
+        this.name = name;
+        this.price = price;
+    }
 }
