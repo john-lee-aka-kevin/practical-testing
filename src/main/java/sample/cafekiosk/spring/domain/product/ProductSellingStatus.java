@@ -16,7 +16,7 @@ public enum ProductSellingStatus {
     STOP_SELLING("판매중지");
 
     /**
-     * Enum의 한글
+     * Enum의 한글명
      */
     private final String text;
 
