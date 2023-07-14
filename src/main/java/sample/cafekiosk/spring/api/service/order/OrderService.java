@@ -42,17 +42,29 @@ public class OrderService {
         final List<String> productNumbers = request.getProductNumbers();
 
         // Product
-        final List<Product> products = this.productRepository.findAllByProductNumberIn(productNumbers);
-        final Map<String, Product> productMap = products.stream()
-                .collect(Collectors.toMap(Product::getProductNumber, p -> p));
-        final List<Product> duplicateProducts = productNumbers.stream()
-                .map(productMap::get)
-                .toList();
+        final List<Product> products = this.findProductsBy(productNumbers);
 
         // Order
-        final Order order = Order.create(duplicateProducts, registeredDateTime);
+        final Order order = Order.create(products, registeredDateTime);
         final Order savedOrder = this.orderRepository.save(order);
 
         return OrderResponse.of(savedOrder);
+    }
+
+    /**
+     * 상품 번호 리스트로 상품 정보 조회 (중복 허용)
+     *
+     * @param productNumbers 상품 번호 리스트
+     *
+     * @return 상품 정보
+     */
+    private List<Product> findProductsBy(final List<String> productNumbers) {
+        final List<Product> products = this.productRepository.findAllByProductNumberIn(productNumbers);
+        final Map<String, Product> productMap = products.stream()
+                .collect(Collectors.toMap(Product::getProductNumber, p -> p));
+
+        return productNumbers.stream()
+                .map(productMap::get)
+                .toList();
     }
 }
