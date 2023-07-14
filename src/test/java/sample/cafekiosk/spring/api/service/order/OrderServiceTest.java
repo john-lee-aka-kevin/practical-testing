@@ -57,7 +57,37 @@ class OrderServiceTest {
                         Tuple.tuple("001", 1_000),
                         Tuple.tuple("002", 3_000)
                 );
+    }
 
+    @DisplayName("중복되는 상품번호 리스트로 주문을 생성할 수 있다.")
+    @Test
+    void a() {
+        // Given
+        final var product1 = this.createProduct(ProductType.HANDMADE, "001", 1_000);
+        final var product2 = this.createProduct(ProductType.HANDMADE, "002", 3_000);
+        final var product3 = this.createProduct(ProductType.HANDMADE, "003", 5_000);
+
+        this.productRepository.saveAll(List.of(product1, product2, product3));
+
+        final var registeredDateTime = LocalDateTime.now();
+        final var request = OrderCreateRequest.builder()
+                .productNumbers(List.of("001", "001"))
+                .build();
+
+        // When
+        final var orderResponse = this.orderService.createOrder(request, registeredDateTime);
+
+        // Then
+        Assertions.assertThat(orderResponse.getId()).isNotNull();
+        Assertions.assertThat(orderResponse)
+                .extracting("registeredDateTime", "totalPrice")
+                .contains(registeredDateTime, 2_000);
+        Assertions.assertThat(orderResponse.getProducts()).hasSize(2)
+                .extracting("productNumber", "price")
+                .containsExactlyInAnyOrder(
+                        Tuple.tuple("001", 1_000),
+                        Tuple.tuple("001", 1_000)
+                );
     }
 
     private Product createProduct(final ProductType type, final String productNumber, final int price) {
