@@ -18,4 +18,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
      * @return 상품 리스트
      */
     List<Product> findAllBySellingStatusIn(final List<ProductSellingStatus> sellingStatuses);
+
+    /**
+     * 인자로 받은 상품번호에 해당하는 상품 리스트 조회
+     *
+     * @param productNumbers 조회에 사용할 상품번호 리스트
+     *
+     * @return 상품 리스트
+     */
+    List<Product> findAllByProductNumberIn(final List<String> productNumbers);
 }
