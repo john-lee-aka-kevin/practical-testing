@@ -55,4 +55,28 @@ public class Stock extends BaseEntity {
                 .quantity(quantity)
                 .build();
     }
+
+    /**
+     * 전달받은 수량보다 현재 재고가 적은지 체크
+     *
+     * @param quantity 전달받은 수량
+     *
+     * @return 전달받은 수량보다 작을 경우 true, 크거나 같을 경우 false
+     */
+    public boolean isQuantityLessThan(final int quantity) {
+        return this.quantity < quantity;
+    }
+
+    /**
+     * 전달받은 수량 만큼 재고를 차감
+     *
+     * @param quantity 전달받은 수량
+     */
+    public void deductQuantity(final int quantity) {
+        if (isQuantityLessThan(quantity)) {
+            throw new IllegalArgumentException("차감할 재고 수량이 없습니다.");
+        }
+
+        this.quantity -= quantity;
+    }
 }
