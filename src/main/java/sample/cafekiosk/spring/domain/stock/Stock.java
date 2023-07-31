@@ -40,4 +40,19 @@ public class Stock extends BaseEntity {
         this.productNumber = productNumber;
         this.quantity = quantity;
     }
+
+    /**
+     * 재고 정보 생성
+     *
+     * @param productNumber 상품 번호
+     * @param quantity 재고 수량
+     *
+     * @return 상품에 대한 재고 정보
+     */
+    public static Stock create(final String productNumber, final int quantity) {
+        return Stock.builder()
+                .productNumber(productNumber)
+                .quantity(quantity)
+                .build();
+    }
 }
