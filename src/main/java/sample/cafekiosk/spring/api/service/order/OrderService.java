@@ -55,20 +55,30 @@ public class OrderService {
         // Product
         final List<Product> products = this.findProductsBy(productNumbers);
 
+        // 재고 차감
+        this.deductStockQuantities(products);
+
+        // Order
+        final Order order = Order.create(products, registeredDateTime);
+        final Order savedOrder = this.orderRepository.save(order);
+
+        return OrderResponse.of(savedOrder);
+    }
+
+    /**
+     * 재고 차감 처리
+     *
+     * @param products 상품 정보 리스트
+     */
+    private void deductStockQuantities(final List<Product> products) {
         // 재고 차감 체크가 필요한 상품들 filter
-        final List<String> stockProductNumbers = products.stream()
-                .filter(product -> ProductType.containsStockType(product.getType()))
-                .map(Product::getProductNumber)
-                .toList();
+        final List<String> stockProductNumbers = extractStockProductNumbers(products);
 
         // 재고 엔티티 조회
-        final List<Stock> stocks = this.stockRepository.findAllByProductNumberIn(stockProductNumbers);
-        final Map<String, Stock> stockMap = stocks.stream()
-                .collect(Collectors.toMap(Stock::getProductNumber, s -> s));
+        final Map<String, Stock> stockMap = createStockMapBy(stockProductNumbers);
 
         // 상품별 counting
-        final Map<String, Long> productCountingMap = stockProductNumbers.stream()
-                .collect(Collectors.groupingBy(p -> p, Collectors.counting()));
+        final Map<String, Long> productCountingMap = createCountingMapBy(stockProductNumbers);
 
         // 재고 차감 시도
         for (final String stockProductNumber : new HashSet<>(stockProductNumbers)) {
@@ -81,12 +91,46 @@ public class OrderService {
 
             stock.deductQuantity(quantity);
         }
+    }
 
-        // Order
-        final Order order = Order.create(products, registeredDateTime);
-        final Order savedOrder = this.orderRepository.save(order);
+    /**
+     * 상품 정보 리스트로 부터 상품 번호 리스트 추출
+     *
+     * @param products 상품 정보 리스트
+     *
+     * @return 상품 번호 리스트
+     */
+    private static List<String> extractStockProductNumbers(final List<Product> products) {
+        return products.stream()
+                .filter(product -> ProductType.containsStockType(product.getType()))
+                .map(Product::getProductNumber)
+                .toList();
+    }
 
-        return OrderResponse.of(savedOrder);
+    /**
+     * 상품 번호 리스트로부터 재고 정보 조회
+     *
+     * @param stockProductNumbers 재고를 조회할 상품 번호 리스트
+     *
+     * @return 조회한 상품에 대한 재고 정보가 담긴 Map
+     */
+    private Map<String, Stock> createStockMapBy(final List<String> stockProductNumbers) {
+        final List<Stock> stocks = this.stockRepository.findAllByProductNumberIn(stockProductNumbers);
+
+        return stocks.stream()
+                .collect(Collectors.toMap(Stock::getProductNumber, s -> s));
+    }
+
+    /**
+     * 상품 번호에 대한 카운팅 (요청된 주문에 대한 상품별 개수 판별 용)
+     *
+     * @param stockProductNumbers 상품 번호 리스트
+     *
+     * @return 상품 번호별 카운팅 정보가 담긴 Map
+     */
+    private static Map<String, Long> createCountingMapBy(final List<String> stockProductNumbers) {
+        return stockProductNumbers.stream()
+                .collect(Collectors.groupingBy(p -> p, Collectors.counting()));
     }
 
     /**
